@@ -34,4 +34,49 @@ $("#search-button").on("click", function(event) {
     });
   
   });
+
+  // Initial array of cities
+var cities = ["London", "New York", "Madrid", "Birmingham"];
+
+// Function for displaying cities data
+function renderButtons() {
+
+  // Deleting the cities buttons prior to adding new buttons
+  // (this is necessary otherwise we will have repeat buttons)
+  $("#history").empty();
+
+  // Looping through the array of cities
+  for (var i = 0; i < cities.length; i++) {
+
+    // Then dynamicaly generating buttons for each city in the array.
+    // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
+    var a = $("<button>");
+    // Adding a class
+    a.addClass("city");
+    // Adding a data-attribute with a value of the city at index i
+    a.attr("data-name", cities[i]);
+    // Providing the button's text with a value of the city at index i
+    a.text(cities[i]);
+    // Adding the button to the HTML
+    $("#history").append(a);
+  }
+}
+
+// This function handles events where one button is clicked
+$("#search-button").on("click", function(event) {
+  
+  event.preventDefault();
+
+  // This line will grab the text from the input box
+  var city = $("#search-input").val().trim();
+  // The city from the textbox is then added to our array
+  cities.push(city);
+
+  // calling renderButtons which handles the processing of our cities array
+  renderButtons();
+});
+
+// Calling the renderButtons function at least once to display the initial list of cities
+renderButtons();
+
   
