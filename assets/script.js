@@ -1,19 +1,8 @@
-//const city = "London";
-//const queryURL = "http://api.openweathermap.org/data/2.5/forecast?id=524901" + city + "&appid=b8c9669d86917b59973649a1b979c9e4"
-
-//$.ajax({
-  //  url: queryURL,
-   // method: "GET"
-//})
-//console.log(queryURL).then(function(response) {
-//var tRow = $("<tr>");
-//var temperature = $("<td>").text(response.temperature);
-//var humidity = $("<td>").text(response.humidity);
-//var windSpeed = $("<td>").text(response.windSpeed);
-
-//tRow.append(temperature, humidity, windSpeed);
-//$("tbody").append(tRow);
-//})
+function fetchCurrentWeather(lat,lon){
+  console.log("fetching current weather")
+  console.log(lat)
+  console.log(lon)
+}
 
 // This .on("click") function will trigger the AJAX Call
 $("#search-button").on("click", function(event) {
@@ -24,32 +13,56 @@ $("#search-button").on("click", function(event) {
     var city = $("#search-input").val();
   
     // Here we construct our URL
-    var queryURL = api.openweathermap.org/data/2.5/forecast?q= + city + "&appid=b8c9669d86917b59973649a1b979c9e4":
-  
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=b8c9669d86917b59973649a1b979c9e4"
+    console.log(queryURL)
     $.ajax({
       url: queryURL,
       method: "GET"
     }).then(function(response) {
-      $(".input-group-append").text(JSON.stringify(response));
+      console.log("APi response here")
+      console.log(response)
+
+      const lat = response.city.coord.lat;
+      const lon = response.city.coord.lon;
+      
+      fetchCurrentWeather(lat,lon) 
+        .then (function (response) {
+          console.log(response);
+          return response.JSON();
+        });
+
+       console.log(response.list[0].weather[0].description)
+       var fiveDays = []
+      for(let i=0; i < response.list.length;i+=8){
+        fiveDays.push(response.list[i])
+        console.log(fiveDays)
+      }
+      console.log("Final fiveDays Array")
+      console.log(fiveDays)
+      makeFiveDayForecast(fiveDays)
+      //$(".input-group-append").text(JSON.stringify(response));
+    }).catch(function(error){
+      console.log(error)
     });
   
   });
 
+function makeFiveDayForecast(data){
+  console.log(data)
+
+}
+
   // Initial array of cities
-var cities = ["London", "New York", "Madrid", "Birmingham"];
+let cities = ["London", "New York", "Madrid", "Birmingham"];
 
 // Function for displaying cities data
 function renderButtons() {
 
-  // Deleting the cities buttons prior to adding new buttons
-  // (this is necessary otherwise we will have repeat buttons)
   $("#history").empty();
 
   // Looping through the array of cities
   for (var i = 0; i < cities.length; i++) {
 
-    // Then dynamicaly generating buttons for each city in the array.
-    // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
     var a = $("<button>");
     // Adding a class
     a.addClass("city");
